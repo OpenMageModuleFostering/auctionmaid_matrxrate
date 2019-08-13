@@ -60,12 +60,12 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
         $found=false;
         $total=0;
         foreach ($request->getAllItems() as $item) {
-        	if ($item->getFreeShipping() && !$item->getProduct()->isVirtual()) {
+        	if ($item->getFreeShipping() && $item->getProductType()!= Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ) {
                     $freeBoxes+=$item->getQty();
             }
             if ($item->getProductType() != Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
                  $item->getProductType() != 'downloadable') {
-                    $total=+ $item->getBaseRowTotal();
+                    $total+= $item->getBaseRowTotal();
                     $found=true;
            	}
         }
