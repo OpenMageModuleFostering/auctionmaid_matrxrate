@@ -68,7 +68,6 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
 		$i=0;
 	   foreach ($ratearray as $rate)
 		{
-			Mage::log(print_r($rate['delivery_type'],true));
 		   if (!empty($rate) && $rate['price'] >= 0) {
 			  $method = Mage::getModel('shipping/rate_result_method');
 

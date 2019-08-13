@@ -3,7 +3,9 @@
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
-    "description": "Multiple Table Rates via CSV. Filter by country, region,city, zipcode. Numeric Postcode ranges, and enhanced pattern matching supported. Ability to exclude items from free shipping, and specify collection only.",
+    "description": "Multiple Table Rates managed via CSV. 
+Ability to filter via Price, Weight or #Items vs Destination. Enhanced filtering on country, region, city, zipcode.  
+Suitable for all countries incl UK, US, AUS, Europe.",
     "authors": [
     {
         "name": "Karen Baker",

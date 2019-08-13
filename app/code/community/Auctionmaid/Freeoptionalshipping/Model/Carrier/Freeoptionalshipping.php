@@ -20,7 +20,7 @@
  *
  * Conditional Free Shipping Module - where if attribute exclude_free_shipping is set
  * will result in free shipping being disabled for checkout
- * 
+ *
  * @category   Auctionmaid
  * @package    Auctionmaid_Freeoptionalshipping
  * @copyright  Copyright (c) 2008 Auction Maid (http://www.auctionmaid.com)
@@ -64,7 +64,6 @@ class Auctionmaid_Freeoptionalshipping_Model_Carrier_Freeoptionalshipping
 			foreach($items as $item) {
 				$product = Mage::getModel('catalog/product')->loadByAttribute('sku', $item->getSku(), 'exclude_free_shipping');
 				if ($product->getData('exclude_free_shipping')) {
-					Mage::log(print_r($item->getSku(),true));
 					return false;
 				}
 			}

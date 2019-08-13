@@ -42,17 +42,17 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
         $table = Mage::getSingleton('core/resource')->getTableName('matrixrate_shipping/matrixrate');
 
 		if ($zipRangeSet) {
-			#  Want to search for postcodes within a range 
+			#  Want to search for postcodes within a range
 			$zipSearchString = $read->quoteInto(" AND dest_zip<=? ", $postcode).
 								$read->quoteInto(" AND dest_zip_to>=? )", $postcode);
 		} else {
 			$zipSearchString = $read->quoteInto(" AND ? LIKE dest_zip )", $postcode);
-		} 
+		}
 
 		for ($j=0;$j<8;$j++)
 		{
 
-			$select = $read->select()->from($table);	
+			$select = $read->select()->from($table);
 			switch($j) {
 				case 0:
 					$select->where(
@@ -69,7 +69,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							$read->quoteInto(" AND dest_region_id=?  AND dest_city=''", $request->getDestRegionId()).
 							$zipSearchString
 						);
-					break;					
+					break;
 				case 2:
 					$select->where(
 						$read->quoteInto(" (dest_country_id=? ", $request->getDestCountryId()).
@@ -77,7 +77,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_zip='')", $request->getDestCity())
 						);
 					break;
-					
+
 				case 3:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
@@ -97,21 +97,21 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							$read->quoteInto(" AND dest_region_id=? AND dest_city='' AND dest_zip='') ", $request->getDestRegionId())
 					   );
 					break;
-		
+
 				case 6:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' AND dest_zip='') ", $request->getDestCountryId())
 					);
 					break;
-	
+
 				case 7:
 					$select->where(
 							"  (dest_country_id='0' AND dest_region_id='0' AND dest_zip='')"
 				);
 					break;
 			}
-	
-	
+
+
 			if (is_array($request->getConditionName())) {
 				$i = 0;
 				foreach ($request->getConditionName() as $conditionName) {
@@ -121,8 +121,8 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 						$select->orWhere('condition_name=?', $conditionName);
 					}
 					$select->where('condition_from_value<=?', $request->getData($conditionName));
-	
-	
+
+
 					$i++;
 				}
 			} else {
@@ -130,21 +130,19 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 				$select->where('condition_from_value<=?', $request->getData($request->getConditionName()));
 				$select->where('condition_to_value>=?', $request->getData($request->getConditionName()));
 			}
-			
-		/*	Mage::log(print_r($request,true));**/
+
 			$select->where('website_id=?', $request->getWebsiteId());
-	
+
 			$select->order('dest_country_id DESC');
 			$select->order('dest_region_id DESC');
 			$select->order('dest_zip DESC');
 			$select->order('condition_from_value DESC');
-	
+
 			/*
 			pdo has an issue. we cannot use bind
 			*/
-	
-	Mage::log(print_r($select,true));
-	
+
+
 			$newdata=array();
 			$row = $read->fetchAll($select);
 			if (!empty($row))
@@ -254,7 +252,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                         } else {
                             $regionId = $regionCodesToIds[$countryCodesToIds[$csvLine[0]]][$csvLine[1]];
                         }
-						
+
 						if (count($csvLine)==9) {
 							// we are searching for postcodes in ranges & including cities
 							if ($csvLine[2] == '*' || $csvLine[2] == '') {
@@ -262,38 +260,38 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							} else {
 								$city = $csvLine[2];
 							}
-							
-							
+
+
 							if ($csvLine[3] == '*' || $csvLine[3] == '') {
 								$zip = '';
 							} else {
 								$zip = $csvLine[3];
 							}
-							
-							
+
+
 							if ($csvLine[4] == '*' || $csvLine[4] == '') {
 								$zip_to = '';
 							} else {
 								$zip_to = $csvLine[4];
 							}
-							
-							
+
+
 							if (!$this->_isPositiveDecimalNumber($csvLine[5]) || $csvLine[5] == '*' || $csvLine[5] == '') {
 								$exceptions[] = Mage::helper('shipping')->__('Invalid %s From "%s" in the Row #%s', $conditionFullName, $csvLine[5], ($k+1));
 							} else {
 								$csvLine[5] = (float)$csvLine[5];
 							}
-	
+
 							if (!$this->_isPositiveDecimalNumber($csvLine[6])) {
 								$exceptions[] = Mage::helper('shipping')->__('Invalid %s To "%s" in the Row #%s', $conditionFullName, $csvLine[6], ($k+1));
 							} else {
 								$csvLine[6] = (float)$csvLine[6];
 							}
-							
-	
+
+
 							$data[] = array('website_id'=>$websiteId, 'dest_country_id'=>$countryId, 'dest_region_id'=>$regionId, 'dest_city'=>$city, 'dest_zip'=>$zip, 'dest_zip_to'=>$zip_to, 'condition_name'=>$conditionName, 'condition_from_value'=>$csvLine[5],'condition_to_value'=>$csvLine[6], 'price'=>$csvLine[7], 'delivery_type'=>$csvLine[8]);
 
-						}	
+						}
 						else {
 
 							if ($csvLine[2] == '*' || $csvLine[2] == '') {
@@ -301,16 +299,16 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							} else {
 								$zip = $csvLine[2]."%";
 							}
-							
+
 							$city='';
 							$zip_to = '';
-							
+
 							if (!$this->_isPositiveDecimalNumber($csvLine[3]) || $csvLine[3] == '*' || $csvLine[3] == '') {
 								$exceptions[] = Mage::helper('shipping')->__('Invalid %s From "%s" in the Row #%s', $conditionFullName, $csvLine[3], ($k+1));
 							} else {
 								$csvLine[3] = (float)$csvLine[3];
 							}
-	
+
 							if (!$this->_isPositiveDecimalNumber($csvLine[4])) {
 								$exceptions[] = Mage::helper('shipping')->__('Invalid %s To "%s" in the Row #%s', $conditionFullName, $csvLine[4], ($k+1));
 							} else {
