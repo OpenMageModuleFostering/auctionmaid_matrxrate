@@ -58,20 +58,20 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
 
         $freeBoxes = 0;
         $found=false;
-        $total=0;
+        $virtualTotal=0;
         foreach ($request->getAllItems() as $item) {
-        	if ($item->getFreeShipping() && $item->getProductType()!= Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ) {
+        	if ($item->getFreeShipping() && $item->getProductType()!= Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL
+        		&& $item->getProductType() != 'downloadable') {
                     $freeBoxes+=$item->getQty();
             }
-            if ($item->getProductType() != Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
+            if ($item->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
                  $item->getProductType() != 'downloadable') {
-                    $total+= $item->getBaseRowTotal();
+                    $virtualTotal+= $item->getBaseRowTotal();
                     $found=true;
-           	}
+            } 
         }
-       if ($found && $this->getConfigFlag('remove_virtual')) {
-        	// this fixes bug in Magento where package value is not set correctly, but at expense of sacrificing discounts
-        	$request->setPackageValue($total);
+        if ($found && $this->getConfigFlag('remove_virtual')) {
+        	$request->setPackageValue($request->getPackageValue()-$virtualTotal);
         }
         $this->setFreeBoxes($freeBoxes);
 
