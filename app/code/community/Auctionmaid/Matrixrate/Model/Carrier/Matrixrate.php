@@ -56,57 +56,38 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
             return false;
         }
 
-        $freeBoxes = 0;
-        $found=false;
-        $total=0;
-            foreach ($request->getAllItems() as $item) {
-                if ($item->getFreeShipping() && !$item->getProduct()->isVirtual()) {
-                    $freeBoxes+=$item->getQty();
-                }
-              if ($item->getProductType() != Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
-                 $item->getProductType() != 'downloadable') {
-                    $total=+ $item->getBaseRowTotal();
-                    $found=true;
-           		}
-            }
-        if ($found) {
-        	$request->setPackageValue($total);
-        }
-        $this->setFreeBoxes($freeBoxes);
 
-        $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
+        if (!$request->getConditionName()) {
+            $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
+        }
 
         $result = Mage::getModel('shipping/rate_result');
      	$ratearray = $this->getRate($request);
 
-
-     	
+		/** TODO Add check to ensure works when isnt an array **/
+		$i=0;
 	   foreach ($ratearray as $rate)
 		{
+			Mage::log(print_r($rate['delivery_type'],true));
 		   if (!empty($rate) && $rate['price'] >= 0) {
 			  $method = Mage::getModel('shipping/rate_result_method');
 
 				$method->setCarrier('matrixrate');
 				$method->setCarrierTitle($this->getConfigData('title'));
 
-				$method->setMethod('matrixrate_'.$rate['pk']);
+		/*		$method->setMethod($rate['delivery_type']);*/
+				$method->setMethod('bestway'+$i);
 
 				$method->setMethodTitle($rate['delivery_type']);
 
 				$shippingPrice = $this->getFinalPriceWithHandlingFee($rate['price']);
+
+				$method->setPrice($shippingPrice);
 				$method->setCost($rate['cost']);
 				$method->setDeliveryType($rate['delivery_type']);
-				
-		        if ($request->getFreeShipping() === true || $request->getPackageQty() == $this->getFreeBoxes()) {
-					$method->setPrice('0.00');
-					$method->setMethodTitle(Mage::helper('shipping')->__('Free Shipping'));
-					$result->append($method);
-					break;
-        		}
-        		
-				$method->setPrice($shippingPrice);
 
 				$result->append($method);
+				$i++;
 			}
 		}
 
@@ -158,7 +139,7 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
      */
     public function getAllowedMethods()
     {
-        return array('matrixrate'=>$this->getConfigData('name'));
+        return array('bestway'=>$this->getConfigData('name'));
     }
 
 }
