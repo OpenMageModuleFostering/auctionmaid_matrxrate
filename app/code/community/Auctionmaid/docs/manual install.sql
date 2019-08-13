@@ -3,7 +3,7 @@ CREATE TABLE shipping_matrixrate (
   website_id int(11) NOT NULL default '0',
   dest_country_id varchar(4) NOT NULL default '0',
   dest_region_id int(10) NOT NULL default '0',
-  dest_city varchar(10) NOT NULL default '',
+  dest_city varchar(30) NOT NULL default '',
   dest_zip varchar(10) NOT NULL default '',
   dest_zip_to varchar(10) NOT NULL default '',
   condition_name varchar(20) NOT NULL default '',

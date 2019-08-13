@@ -49,7 +49,6 @@ class Auctionmaid_Freeoptionalshipping_Model_Carrier_Freeoptionalshipping
 
 
         $result = Mage::getModel('shipping/rate_result');
-//      $packageValue = $request->getBaseCurrency()->convert($request->getPackageValueWithDiscount(), $request->getPackageCurrency());
         $packageValue = $request->getPackageValueWithDiscount();
 
         $this->_updateFreeMethodQuote($request);
@@ -62,7 +61,7 @@ class Auctionmaid_Freeoptionalshipping_Model_Carrier_Freeoptionalshipping
 			// now make sure free shipping is allowed for this product
 			$items = $request->getAllItems();
 			foreach($items as $item) {
-				$product = Mage::getModel('catalog/product')->loadByAttribute('sku', $item->getSku(), 'exclude_free_shipping');
+				$product = Mage::getModel('catalog/product')->loadByAttribute('entity_id', $item->getProductId(), 'exclude_free_shipping');
 				if ($product->getData('exclude_free_shipping')) {
 					return false;
 				}
