@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento Auctionmaid Shipping Module
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   Auctionmaid
+ * @package    Auctionmaid_Freeoptionalshipping
+ * @copyright  Copyright (c) 2008 Auction Maid (http://www.auctionmaid.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Karen Baker <enquiries@auctionmaid.com>
+*/
+-->
+<config>
+   <modules>
+   <!-- declare module's version information -->
+        <Auctionmaid_Freeoptionalshipping>
+    <!-- this version number will be used for database upgrades -->
+          <version>1.0.5</version>
+           <depends>
+               <Mage_Shipping />
+           </depends>
+    </Auctionmaid_Freeoptionalshipping>
+    </modules>
+ <global>
+<!-- declare model group for new module -->
+    <models>
+		<!-- model group alias to be used in Mage::getModel() -->
+      <freeoptionalshipping>
+<!-- base class name for the model group -->
+        <class>Auctionmaid_Freeoptionalshipping_Model</class>
+      </freeoptionalshipping>
+    </models>
+ 
+<!-- declare resource setup for new module -->
+    <resources>
+<!-- resource identifier -->
+      <Freeoptionalshipping_setup>
+<!-- specify that this resource is a setup resource and used for upgrades -->
+        <setup>
+<!-- which module to look for install/upgrade files in -->
+          <module>Auctionmaid_Freeoptionalshipping</module>
+        </setup>
+<!-- specify database connection for this resource -->
+        <connection>
+<!-- do not create new connection, use predefined core setup connection -->
+          <use>core_setup</use>
+        </connection>
+      </Freeoptionalshipping_setup>
+    </resources>
+    <sales>
+	<shipping>
+	    <carriers>
+		<freeoptionalshipping>
+		    <class>Auctionmaid_Freeoptionalshipping_Model_Carrier_Freeoptionalshipping</class>
+		</freeoptionalshipping>
+	    </carriers>
+	</shipping>
+    </sales>
+  </global>
+    <default>
+        <carriers>
+            <freeoptionalshipping>
+                <active>0</active>
+                <sallowspecific>0</sallowspecific>
+                <cutoff_cost>50</cutoff_cost>
+                <model>freeoptionalshipping/carrier_freeoptionalshipping</model>
+                <name>Free</name>
+                <title>Free Shipping</title>
+                <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>      
+            </freeoptionalshipping>
+        </carriers>
+    </default>
+</config>

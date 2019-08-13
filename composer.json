@@ -1,0 +1,18 @@
+{
+    "name": "OpenMageModuleFostering/Auctionmaid_Matrxrate",
+    "type": "magento-module",
+    "license": "OSL-v3.0",
+    "homepage": "",
+    "description": "Multiple Table Rates managed via CSV. 
+Ability to filter via Price, Weight or #Items vs Destination. Enhanced filtering on country, region, city, zipcode.  
+Suitable for all countries incl UK, US, AUS, Europe.",
+    "authors": [
+    {
+        "name": "Karen Baker",
+        "email": "enquiries@auctionmaid.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
