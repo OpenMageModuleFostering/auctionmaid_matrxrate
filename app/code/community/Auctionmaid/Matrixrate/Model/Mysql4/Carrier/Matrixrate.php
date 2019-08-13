@@ -231,6 +231,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                     }
 
                     foreach ($csvLines as $k=>$csvLine) {
+
                         $csvLine = $this->_getCsvValues($csvLine);
 
                         if (empty($countryCodesToIds) || !array_key_exists($csvLine[0], $countryCodesToIds)) {
@@ -334,7 +335,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 
                     foreach($data as $k=>$dataLine) {
                         try {
-                            $connection->insert($table, $dataLine);
+                           $connection->insert($table, $dataLine);
                         } catch (Exception $e) {
                             $exceptions[] = Mage::helper('shipping')->__('Duplicate Row #%s (Country "%s", Region/State "%s", City "%s", Zip From "%s", Zip To "%s", Delivery Type "%s", Value From "%s" and Value To "%s")', ($k+1), $dataDetails[$k]['country'], $dataDetails[$k]['region'], $dataLine['dest_city'], $dataLine['dest_zip'],  $dataLine['dest_zip_to'], $dataLine['delivery_type'], $dataLine['condition_from_value'], $dataLine['condition_to_value']);
                         }

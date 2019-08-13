@@ -57,14 +57,11 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
         }
 
 
-        if (!$request->getConditionName()) {
-            $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
-        }
+        $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
 
         $result = Mage::getModel('shipping/rate_result');
      	$ratearray = $this->getRate($request);
 
-		/** TODO Add check to ensure works when isnt an array **/
 		$i=0;
 	   foreach ($ratearray as $rate)
 		{
@@ -74,7 +71,6 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
 				$method->setCarrier('matrixrate');
 				$method->setCarrierTitle($this->getConfigData('title'));
 
-		/*		$method->setMethod($rate['delivery_type']);*/
 				$method->setMethod('bestway'+$i);
 
 				$method->setMethodTitle($rate['delivery_type']);
