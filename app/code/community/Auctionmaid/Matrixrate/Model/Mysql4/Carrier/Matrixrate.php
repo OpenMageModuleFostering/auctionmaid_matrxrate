@@ -49,7 +49,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			$zipSearchString = $read->quoteInto(" AND ? LIKE dest_zip )", $postcode);
 		}
 
-		for ($j=0;$j<8;$j++)
+		for ($j=0;$j<9;$j++)
 		{
 
 			$select = $read->select()->from($table);
@@ -77,34 +77,40 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_zip='')", $request->getDestCity())
 						);
 					break;
-
 				case 3:
+					$select->where(
+					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
+							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_region_id='0'", $request->getDestCity()).
+							$zipSearchString
+					   );
+					break;
+				case 4:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
 							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_region_id='0' AND dest_zip='') ", $request->getDestCity())
 					   );
 					break;
-				case 4:
+				case 5:
 					$select->where(
 						$read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' ", $request->getDestCountryId()).
 					 #  	$read->quoteInto("  AND ? LIKE dest_zip ) ", $postcode)
 							$zipSearchString
 						);
 					break;
-				case 5:
+				case 6:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
 							$read->quoteInto(" AND dest_region_id=? AND dest_city='' AND dest_zip='') ", $request->getDestRegionId())
 					   );
 					break;
 
-				case 6:
+				case 7:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' AND dest_zip='') ", $request->getDestCountryId())
 					);
 					break;
 
-				case 7:
+				case 8:
 					$select->where(
 							"  (dest_country_id='0' AND dest_region_id='0' AND dest_zip='')"
 				);
@@ -137,7 +143,6 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			$select->order('dest_region_id DESC');
 			$select->order('dest_zip DESC');
 			$select->order('condition_from_value DESC');
-
 			/*
 			pdo has an issue. we cannot use bind
 			*/
