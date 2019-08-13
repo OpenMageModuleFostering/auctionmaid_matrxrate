@@ -65,7 +65,7 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
                     $freeBoxes+=$item->getQty();
             }
             if ($item->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
-                 $item->getProductType() != 'downloadable') {
+                 $item->getProductType() == 'downloadable') {
                     $virtualTotal+= $item->getBaseRowTotal();
                     $found=true;
             } 
