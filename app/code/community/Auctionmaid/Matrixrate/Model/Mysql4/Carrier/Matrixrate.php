@@ -49,7 +49,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			$zipSearchString = $read->quoteInto(" AND ? LIKE dest_zip )", $postcode);
 		} 
 
-		for ($j=0;$j<7;$j++)
+		for ($j=0;$j<8;$j++)
 		{
 
 			$select = $read->select()->from($table);	
@@ -66,37 +66,45 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 				case 1:
 					$select->where(
 						$read->quoteInto(" (dest_country_id=? ", $request->getDestCountryId()).
+							$read->quoteInto(" AND dest_region_id=?  AND dest_city=''", $request->getDestRegionId()).
+							$zipSearchString
+						);
+					break;					
+				case 2:
+					$select->where(
+						$read->quoteInto(" (dest_country_id=? ", $request->getDestCountryId()).
 							$read->quoteInto(" AND dest_region_id=? ", $request->getDestRegionId()).
 							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_zip='')", $request->getDestCity())
 						);
 					break;
-				case 2:
+					
+				case 3:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
 							$read->quoteInto(" AND STRCMP(LOWER(dest_city),LOWER(?)) = 0  AND dest_region_id='0' AND dest_zip='') ", $request->getDestCity())
 					   );
 					break;
-				case 3:
+				case 4:
 					$select->where(
 						$read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' ", $request->getDestCountryId()).
 					 #  	$read->quoteInto("  AND ? LIKE dest_zip ) ", $postcode)
 							$zipSearchString
 						);
 					break;
-				case 4:
+				case 5:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? ", $request->getDestCountryId()).
 							$read->quoteInto(" AND dest_region_id=? AND dest_city='' AND dest_zip='') ", $request->getDestRegionId())
 					   );
 					break;
 		
-				case 5:
+				case 6:
 					$select->where(
 					   $read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' AND dest_zip='') ", $request->getDestCountryId())
 					);
 					break;
 	
-				case 6:
+				case 7:
 					$select->where(
 							"  (dest_country_id='0' AND dest_region_id='0' AND dest_zip='')"
 				);
@@ -135,6 +143,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			pdo has an issue. we cannot use bind
 			*/
 	
+	Mage::log(print_r($select,true));
 	
 			$newdata=array();
 			$row = $read->fetchAll($select);
@@ -205,16 +214,22 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                     $data = array();
                     $countryCodesToIds = array();
                     $regionCodesToIds = array();
+                    $countryCodesIso2 = array();
 
                     $countryCollection = Mage::getResourceModel('directory/country_collection')->addCountryCodeFilter($countryCodes)->load();
                     foreach ($countryCollection->getItems() as $country) {
                         $countryCodesToIds[$country->getData('iso3_code')] = $country->getData('country_id');
                         $countryCodesToIds[$country->getData('iso2_code')] = $country->getData('country_id');
+                        $countryCodesIso2[] = $country->getData('iso2_code');
                     }
 
-                    $regionCollection = Mage::getResourceModel('directory/region_collection')->addRegionCodeFilter($regionCodes)->load();
+     				$regionCollection = Mage::getResourceModel('directory/region_collection')
+                        ->addRegionCodeFilter($regionCodes)
+                        ->addCountryFilter($countryCodesIso2)
+                        ->load();
+
                     foreach ($regionCollection->getItems() as $region) {
-                        $regionCodesToIds[$region->getData('code')] = $region->getData('region_id');
+                        $regionCodesToIds[$countryCodesToIds[$region->getData('country_id')]][$region->getData('code')] = $region->getData('region_id');
                     }
 
                     foreach ($csvLines as $k=>$csvLine) {
@@ -229,13 +244,15 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
                             $countryId = $countryCodesToIds[$csvLine[0]];
                         }
 
-                        if (empty($regionCodesToIds) || !array_key_exists($csvLine[1], $regionCodesToIds)) {
+                        if (!isset($countryCodesToIds[$csvLine[0]])
+                            || !isset($regionCodesToIds[$countryCodesToIds[$csvLine[0]]])
+                            || !array_key_exists($csvLine[1], $regionCodesToIds[$countryCodesToIds[$csvLine[0]]])) {
                             $regionId = '0';
                             if ($csvLine[1] != '*' && $csvLine[1] != '') {
                                 $exceptions[] = Mage::helper('shipping')->__('Invalid Region/State "%s" in the Row #%s', $csvLine[1], ($k+1));
                             }
                         } else {
-                            $regionId = $regionCodesToIds[$csvLine[1]];
+                            $regionId = $regionCodesToIds[$countryCodesToIds[$csvLine[0]]][$csvLine[1]];
                         }
 						
 						if (count($csvLine)==9) {
@@ -275,6 +292,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 							
 	
 							$data[] = array('website_id'=>$websiteId, 'dest_country_id'=>$countryId, 'dest_region_id'=>$regionId, 'dest_city'=>$city, 'dest_zip'=>$zip, 'dest_zip_to'=>$zip_to, 'condition_name'=>$conditionName, 'condition_from_value'=>$csvLine[5],'condition_to_value'=>$csvLine[6], 'price'=>$csvLine[7], 'delivery_type'=>$csvLine[8]);
+
 						}	
 						else {
 
