@@ -1,7 +1,0 @@
-"Country","Region/State","Zip/Postal Code","Price >=","Price To<=","Shipping Price","Delivery Type"
-"USA","*","*",0,24.99,6.95,"Standard"
-"USA","*","*",25,49.99,7.95,"Standard"
-"USA","*","*",50,74.99,8.95,"Standard"
-"USA","*","*",75,99.99,9.95,"Standard"
-"USA","*","*",100,1000000,0,"Standard"
-"USA","*","*",0,1000000,0,"Expedited"

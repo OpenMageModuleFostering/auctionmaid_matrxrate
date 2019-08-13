@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <package>
     <name>Auctionmaid_Matrxrate</name>
-    <version>3.0.6</version>
+    <version>5.1.1</version>
     <stability>stable</stability>
     <license uri="http://www.opensource.org/licenses/osl-3.0.php">OSL v3.0</license>
     <channel>community</channel>
     <extends/>
-    <summary>Multiple Table Rates managed via CSV. 
-Ability to filter via Price, Weight or #Items vs Destination. Enhanced filtering on country, region, city, zipcode.  
-Suitable for all countries incl UK, US, AUS, Europe.</summary>
-    <description>Supports following:
-
-- multiple table rate via csv file
-- filter on #items, weight, or price vs destination
-- country, region, city, postcode filtering
-- partial postcode filtering, including pattern matching
-- numerical postcode ranges</description>
-    <notes>1 - The export csv option is currently disabled. This is so the extension does not conflict with the existing tablerates.  There are no plans to resolve this - if you need to view the data look in phpmyadmin.</notes>
-    <authors><author><name>Karen Baker</name><user>auto-converted</user><email>sales@webshopapps.com</email></author></authors>
-    <date>2010-02-03</date>
-    <time>06:05:47</time>
-    <contents><target name="magecommunity"><dir name="Auctionmaid"><file name="license.txt" hash="b7870fbc716085862b4cba9b4629a24e"/><dir name="Adminhtml"><dir name="Model"><dir name="System"><dir name="Config"><dir name="Backend"><dir name="Shipping"><file name="Matrixrate.php" hash="3845daf2530ea28f4c1c9ef0896e4590"/></dir></dir><dir name="Source"><dir name="Shipping"><file name="Matrixrate.php" hash="bf0ab44901dacc3774a8afab91c08848"/></dir></dir></dir></dir></dir></dir><dir name="docs"><file name="manual install.sql" hash="838db93c057c71ed75b3b472d2d71c1e"/><file name="Webshopapps MatrixRate Shipping Module.pdf" hash="bfaf672b71d712d7517f08d074cd8646"/></dir><dir name="example"><dir name="7-col"><file name="export_all_products.csv" hash="ee76a59cc041f80012dc547febaf5393"/><file name="tablerates - item tofrom.csv" hash="c21b4cbf21aefa5cc590ccd2ff073a04"/><file name="tablerates - price tofrom.csv" hash="834af0aeb1aa98abf91f637015f5e3ba"/><file name="tablerates - weight tofrom.csv" hash="c2d26d1097c6a6b1641353b548437421"/><file name="weight postcode starts with.csv" hash="b83d1c8f6798a42186a63116fc5575b3"/></dir><dir name="9-col"><file name="AusRanges.csv" hash="7884e9c2a15f495ce6a80091c38478b5"/><file name="item simple.csv" hash="084d12ca05b5cbe8eb2b64d232abd6f8"/><file name="usa example.csv" hash="14606c3f468b323d55a11f5a8c45dd82"/><file name="weight postcode range.csv" hash="8b0f12598742f57a5444bfee16219603"/><file name="weight postcode starts with.csv" hash="b83d1c8f6798a42186a63116fc5575b3"/></dir></dir><dir name="Matrixrate"><dir name="etc"><file name="config.xml" hash="ac562da37b337d17d2f2fb54a7eef18a"/><file name="system.xml" hash="84ebdd5bd9abe8b01de1217f8a7d732e"/></dir><dir name="Model"><dir name="Carrier"><file name="Matrixrate.php" hash="b83f992a62e4820a9505a362a6b14202"/></dir><dir name="Mysql4"><dir name="Carrier"><file name="Matrixrate.php" hash="440bee2737cf7ba7d85df66e3efe0641"/><dir name="Matrixrate"><file name="Collection.php" hash="e9833f77c95c5b00e2e0abc37195e382"/></dir></dir></dir></dir><dir name="sql"><dir name="matrixrate_setup"><file name="mysql4-install-2.0.1.php" hash="52a413f99ce3d571a067cdfb677bbf32"/><file name="mysql4-uninstall-2.0.1.php" hash="d6c1d1d151f31a9d4f78e437d1d73e38"/><file name="mysql4-upgrade-2.0.1.php" hash="b880269c8cc28028c4ed0157b4f74d54"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Auctionmaid_Matrixrate.xml" hash="bde75a0463f7dc40affc8b2ce812ec91"/></dir></target></contents>
+    <summary>Multiple Table Rates via CSV. Filter by country, region,city, zipcode. Numeric Postcode ranges, and enhanced pattern matching supported. Ability to exclude items from free shipping, and specify collection only.</summary>
+    <description>Supports following:&#xD;
+&#xD;
+- multiple table rates&#xD;
+- country, region, city, postcode filtering&#xD;
+- partial postcode filtering, including pattern matching&#xD;
+- numerical postcode ranges&#xD;
+- option to exclude items from free shipping&#xD;
+- collection only option</description>
+    <notes>Resolved issue with exporting after applying Magento patch SUPEE-6285.&#xD;
+Removed Logger.</notes>
+    <authors><author><name>Karen Baker</name><user>birches</user><email>sales@webshopapps.com</email></author></authors>
+    <date>2016-09-05</date>
+    <time>13:55:19</time>
+    <contents><target name="magecommunity"><dir name="Webshopapps"><dir name="Adminshortcut"><dir name="Helper"><file name="Data.php" hash="e0b3d57fb624622b400e601f2229e991"/></dir><file name="changelog.txt" hash="0716b4fd8f070dd826fa9ccd4577bc2c"/><dir name="etc"><file name="adminhtml.xml" hash="80b231894e0108aa914715da3b42bf5e"/><file name="config.xml" hash="4222cc2209d41b89d24f47f7b7342bb7"/></dir></dir><dir name="Matrixrate"><dir name="Block"><dir name="Adminhtml"><dir name="Shipping"><dir name="Carrier"><dir name="Matrixrate"><file name="Grid.php" hash="fd4e12b07959a1b5d688d36654d92d97"/></dir></dir></dir><dir name="System"><dir name="Config"><dir name="Form"><dir name="Field"><file name="Exportmatrix.php" hash="2b7303c9c6e341f111cea18f70df6e1a"/></dir></dir></dir></dir></dir></dir><dir name="Helper"><file name="Data.php" hash="13bd97df1c6b7608186dde469f0b5403"/></dir><dir name="Model"><dir name="Adminhtml"><dir name="System"><dir name="Config"><dir name="Backend"><dir name="Shipping"><file name="Matrixrate.php" hash="e5d05f6942c1706e1bd9dcb1eeedfc38"/></dir></dir><dir name="Source"><dir name="Shipping"><file name="Matrixrate.php" hash="30289deea24070033c6961f91f811d30"/></dir></dir></dir></dir></dir><dir name="Carrier"><file name="Matrixrate.php" hash="a378fa7478f64962b285ce0e457066cf"/></dir><dir name="Mysql4"><dir name="Carrier"><dir name="Matrixrate"><file name="Collection.php" hash="42c755376dce39c8b1a2e31ab4426105"/></dir><file name="Matrixrate.php" hash="5904bde74963adc5bc09f60e66392075"/></dir></dir></dir><file name="changelog.txt" hash="d22505abe3abc6e87b2d92909419cc22"/><dir name="controllers"><dir name="System"><file name="ConfigController.php" hash="c4707dae6400f08dbd99e6f30c3bf943"/></dir></dir><dir name="etc"><file name="config.xml" hash="5298441fbabd4d7fa5a60ad6bf7c560c"/><file name="system.xml" hash="ca06f9f7f1b40f522be54b736291bcc7"/></dir><dir name="sql"><dir name="matrixrate_setup"><file name="mysql4-install-2.0.1.php" hash="52a413f99ce3d571a067cdfb677bbf32"/><file name="mysql4-install-2.0.2.php" hash="b6530f7e95e610db357ed46bc23629b9"/><file name="mysql4-upgrade-2.0.1-2.0.2.php" hash="b6530f7e95e610db357ed46bc23629b9"/></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Webshopapps_Matrixrate.xml" hash="ac8b13f26402b2f0e7f6b22c3430fec8"/></dir></target><target name="magelocale"><dir name="en_US"><file name="Auctionmaid_Matrixrate.csv" hash="4ea4e748fd3601f2535825790a89d52f"/></dir></target></contents>
     <compatible/>
-    <dependencies/>
+    <dependencies><required><php><min>5.2.0</min><max>6.0.0</max></php></required></dependencies>
 </package>
