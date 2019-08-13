@@ -147,7 +147,6 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			pdo has an issue. we cannot use bind
 			*/
 
-
 			$newdata=array();
 			$row = $read->fetchAll($select);
 			if (!empty($row))

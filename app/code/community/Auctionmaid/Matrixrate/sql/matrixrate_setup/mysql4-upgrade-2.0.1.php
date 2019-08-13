@@ -25,15 +25,7 @@ CREATE TABLE {$this->getTable('shipping_matrixrate')} (
   UNIQUE KEY `dest_country` (`website_id`,`dest_country_id`,`dest_region_id`,`dest_city`,`dest_zip`,`dest_zip_to`,`condition_name`,`condition_from_value`,`condition_to_value`,`delivery_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-select @entity_type_id:=entity_type_id from {$this->getTable('eav_entity_type')}
-where entity_type_code='catalog_product';
 
-replace into {$this->getTable('eav_attribute')}
-    set entity_type_id 	= @entity_type_id,
-    	attribute_code 	= 'exclude_free_shipping',
-    	backend_type	= 'int',
-    	frontend_input	= 'boolean',
-    	frontend_label	= 'Exclude product from Free Shipping';
 
    ");
 

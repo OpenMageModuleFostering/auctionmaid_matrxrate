@@ -56,13 +56,59 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
             return false;
         }
 
+        $freeBoxes = 0;
+        $found=false;
+        $total=0;
+        foreach ($request->getAllItems() as $item) {
+        	if ($item->getFreeShipping() && !$item->getProduct()->isVirtual()) {
+                    $freeBoxes+=$item->getQty();
+            }
+            if ($item->getProductType() != Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL ||
+                 $item->getProductType() != 'downloadable') {
+                    $total=+ $item->getBaseRowTotal();
+                    $found=true;
+           	}
+        }
+        if ($found) {
+        	// this fixes bug in Magento where package value is not set correctly.
+        	$request->setPackageValue($total);
+        }
+        $this->setFreeBoxes($freeBoxes);
 
         $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
 
         $result = Mage::getModel('shipping/rate_result');
      	$ratearray = $this->getRate($request);
 
-		$i=0;
+     	$freeShipping=false;
+     	
+     	if ($this->getConfigData('enable_free_shipping_threshold') && 
+	        $this->getConfigData('free_shipping_threshold')!='' && 
+	        $this->getConfigData('free_shipping_threshold')>0 &&
+	        $request->getPackageValue()>$this->getConfigData('free_shipping_threshold')) {
+	         	$freeShipping=true;
+	    }
+    	if ($this->getConfigData('allow_free_shipping_promotions') &&
+	        ($request->getFreeShipping() === true || 
+	        $request->getPackageQty() == $this->getFreeBoxes()))
+        {
+         	$freeShipping=true;
+        }
+        if ($freeShipping)
+        {
+		  	$method = Mage::getModel('shipping/rate_result_method');
+			$method->setCarrier('matrixrate');
+			$method->setCarrierTitle($this->getConfigData('title'));
+			$method->setMethod('matrixrate_free');
+			$method->setPrice('0.00');
+			$method->setMethodTitle($this->getConfigData('free_method_text'));
+			$result->append($method);
+			
+			if ($this->getConfigData('show_only_free')) {
+				return $result;
+			}
+		}
+     	
 	   foreach ($ratearray as $rate)
 		{
 		   if (!empty($rate) && $rate['price'] >= 0) {
@@ -71,18 +117,17 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
 				$method->setCarrier('matrixrate');
 				$method->setCarrierTitle($this->getConfigData('title'));
 
-				$method->setMethod('bestway'+$i);
+				$method->setMethod('matrixrate_'.$rate['pk']);
 
 				$method->setMethodTitle($rate['delivery_type']);
 
 				$shippingPrice = $this->getFinalPriceWithHandlingFee($rate['price']);
-
-				$method->setPrice($shippingPrice);
 				$method->setCost($rate['cost']);
 				$method->setDeliveryType($rate['delivery_type']);
+        		
+				$method->setPrice($shippingPrice);
 
 				$result->append($method);
-				$i++;
 			}
 		}
 
@@ -134,7 +179,7 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
      */
     public function getAllowedMethods()
     {
-        return array('bestway'=>$this->getConfigData('name'));
+        return array('matrixrate'=>$this->getConfigData('name'));
     }
 
 }

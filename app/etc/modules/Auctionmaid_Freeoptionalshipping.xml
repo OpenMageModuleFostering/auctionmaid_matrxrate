@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config>
-	<modules>
-		<Auctionmaid_Freeoptionalshipping>
-			<active>true</active>
-			<codePool>community</codePool>
-		</Auctionmaid_Freeoptionalshipping>
-	</modules>	
-</config>
