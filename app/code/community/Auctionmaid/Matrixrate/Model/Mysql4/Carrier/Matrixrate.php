@@ -49,7 +49,7 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 			$zipSearchString = $read->quoteInto(" AND ? LIKE dest_zip )", $postcode);
 		}
 
-		for ($j=0;$j<9;$j++)
+		for ($j=0;$j<10;$j++)
 		{
 
 			$select = $read->select()->from($table);
@@ -109,8 +109,14 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate extends Mage_Core_M
 					   $read->quoteInto("  (dest_country_id=? AND dest_region_id='0' AND dest_city='' AND dest_zip='') ", $request->getDestCountryId())
 					);
 					break;
-
 				case 8:
+						$select->where(
+						   "  (dest_country_id='0' AND dest_region_id='0'".
+						   $zipSearchString
+						);
+					break;
+
+				case 9:
 					$select->where(
 							"  (dest_country_id='0' AND dest_region_id='0' AND dest_zip='')"
 				);

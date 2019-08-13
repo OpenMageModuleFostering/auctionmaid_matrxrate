@@ -99,6 +99,7 @@
         <carriers>
             <matrixrate>
                 <active>0</active>
+                <remove_virtual>0</remove_virtual>
                 <sallowspecific>0</sallowspecific>
                 <allow_free_shipping_promotions>1</allow_free_shipping_promotions>
                 <show_only_free>0</show_only_free>

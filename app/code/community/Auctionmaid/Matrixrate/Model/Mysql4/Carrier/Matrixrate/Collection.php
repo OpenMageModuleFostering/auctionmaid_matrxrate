@@ -34,7 +34,6 @@ class Auctionmaid_Matrixrate_Model_Mysql4_Carrier_Matrixrate_Collection extends 
 
     public function __construct()
     {
-		throw new Exception('where');
         parent::__construct(Mage::getSingleton('core/resource')->getConnection('shipping_read'));
         $this->_shipTable = Mage::getSingleton('core/resource')->getTableName('matrixrate_shipping/matrixrate');
         $this->_countryTable = Mage::getSingleton('core/resource')->getTableName('directory/country');

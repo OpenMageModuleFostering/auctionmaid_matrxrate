@@ -69,8 +69,8 @@ class Auctionmaid_Matrixrate_Model_Carrier_Matrixrate
                     $found=true;
            	}
         }
-        if ($found) {
-        	// this fixes bug in Magento where package value is not set correctly.
+       if ($found && $this->getConfigFlag('remove_virtual')) {
+        	// this fixes bug in Magento where package value is not set correctly, but at expense of sacrificing discounts
         	$request->setPackageValue($total);
         }
         $this->setFreeBoxes($freeBoxes);
